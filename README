@@ -1,0 +1,14 @@
+Uber Updater
+============================================================================
+License:		Creative Commons Attribution-ShareAlike 3.0 unported
+Author(s):		limpygnome			limpygnome@gmail.com
+Version:		1.0.0
+
+An auto-updater intended to be shared by Ubermeat applications; this can also
+be publicly used too.
+
+Features:
+- Major.min.build revision system with download and changelog support.
+- Detects dependent processes and files.
+- Distributed with an application in complete isolation with just a single
+  executable, dll and XML settings file.
