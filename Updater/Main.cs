@@ -1,15 +1,17 @@
 ﻿/*
- * Creative Commons Attribution-ShareAlike 3.0 unported
- * ***************************************************************
- * Author:  limpygnome
- * E-mail:  limpygnome@gmail.com
- * Site:    ubermeat.co.uk
- * ***************************************************************
- * Credit to:
- * -- http://dotnetzip.codeplex.com/ - DotNetZip library
+ * UBERMEAT FOSS
+ * ****************************************************************************************
+ * License:                 Creative Commons Attribution-ShareAlike 3.0 unported
+ *                          http://creativecommons.org/licenses/by-sa/3.0/
  * 
+ * Project:                 Uber Updater
+ * File:                    /Main.cs
+ * Author(s):               limpygnome						limpygnome@gmail.com
+ *                          DotNetZip library               http://dotnetzip.codeplex.com/
+ * To-do/bugs:              none
+ * 
+ * Responsible for interacting with the user and updating an application.
  */
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +34,7 @@ namespace Updater
         /// <summary>
         /// Used to store the settings for the current version of the application.
         /// </summary>
-        XmlDocument settings;
+        private XmlDocument settings;
         #endregion
 
         #region "Constructors"
@@ -214,7 +216,7 @@ namespace Updater
             List<string> blacklist = new List<string>();
             foreach (XmlNode file in m.settings["update"]["excludedFiles"].ChildNodes)
                 blacklist.Add(file.InnerText);
-            // Copy each file exepct the excluded files
+            // Copy each file except the excluded files
             int removeLength = tempFolder.Length;
             string newFileName, newFilePath, newDirectory;
             statusBar(m, 80);
@@ -253,12 +255,20 @@ namespace Updater
             { File.Delete(Environment.CurrentDirectory + "\\Update.zip"); }
             catch (Exception ex) { throwError(m, ex.Message); Environment.Exit(1); }
             // Launch the application
-            status(m, "Update complete, launching application!");
-            statusBar(m, 100);
-            try
-            { Process.Start(AppDomain.CurrentDomain.BaseDirectory + "\\" + m.settings["update"]["executeFile"].InnerText); }
-            catch
-            { throwError(m, "Failed to launch updated application."); }
+            if (m.settings["update"]["executeFile"] != null)
+            {
+                status(m, "Update complete, launching application!");
+                statusBar(m, 100);
+                try
+                { Process.Start(AppDomain.CurrentDomain.BaseDirectory + "\\" + m.settings["update"]["executeFile"].InnerText); }
+                catch
+                { throwError(m, "Failed to launch updated application."); }
+            }
+            else
+            {
+                status(m, "Update complete, exiting!");
+                statusBar(m, 100);
+            }
             // Exit
             Environment.Exit(1);
         }
