@@ -201,17 +201,20 @@ namespace Updater
             if (Directory.Exists(tempFolder))
                 try
                 { Directory.Delete(tempFolder, true); }
-                catch (Exception ex) { throwError(m, ex.Message); Environment.Exit(1); }
+                catch (Exception ex) { throwError(m, "Error occurred creating temp directory:\r\n" + ex.Message); Environment.Exit(1); }
             Directory.CreateDirectory(tempFolder);
             // Unzip the downloaded data
             status(m, "Unzipping downloaded data...");
             statusBar(m, 70);
-            ZipFile f = new ZipFile(Environment.CurrentDirectory + "\\Update.zip");
+            
             try
-            { f.ExtractAll(tempFolder); }
+            {
+                ZipFile f = new ZipFile(Environment.CurrentDirectory + "\\Update.zip");
+                f.ExtractAll(tempFolder);
+                f.Dispose();
+            }
             catch (Exception ex)
             { throwError(m, "Failed to extract data - " + ex.Message); Environment.Exit(1); }
-            f.Dispose();
             // Build list of blacklisted files
             List<string> blacklist = new List<string>();
             foreach (XmlNode file in m.settings["update"]["excludedFiles"].ChildNodes)

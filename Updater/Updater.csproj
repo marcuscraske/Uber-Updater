@@ -62,9 +62,6 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ionic.Zip.Reduced">
-      <HintPath>Ionic.Zip.Reduced.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -73,6 +70,56 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DotNetZip\BZip2\BitWriter.cs" />
+    <Compile Include="DotNetZip\BZip2\BZip2Compressor.cs" />
+    <Compile Include="DotNetZip\BZip2\BZip2InputStream.cs" />
+    <Compile Include="DotNetZip\BZip2\BZip2OutputStream.cs" />
+    <Compile Include="DotNetZip\BZip2\ParallelBZip2OutputStream.cs" />
+    <Compile Include="DotNetZip\BZip2\Rand.cs" />
+    <Compile Include="DotNetZip\CRC32.cs" />
+    <Compile Include="DotNetZip\Zip\ComHelper.cs" />
+    <Compile Include="DotNetZip\Zip\EncryptionAlgorithm.cs" />
+    <Compile Include="DotNetZip\Zip\Events.cs" />
+    <Compile Include="DotNetZip\Zip\Exceptions.cs" />
+    <Compile Include="DotNetZip\Zip\ExtractExistingFileAction.cs" />
+    <Compile Include="DotNetZip\Zip\FileSelector.cs" />
+    <Compile Include="DotNetZip\Zip\OffsetStream.cs" />
+    <Compile Include="DotNetZip\Zip\Shared.cs" />
+    <Compile Include="DotNetZip\Zip\WinZipAes.cs" />
+    <Compile Include="DotNetZip\Zip\ZipConstants.cs" />
+    <Compile Include="DotNetZip\Zip\ZipCrypto.cs" />
+    <Compile Include="DotNetZip\Zip\ZipDirEntry.cs" />
+    <Compile Include="DotNetZip\Zip\ZipEntry.cs" />
+    <Compile Include="DotNetZip\Zip\ZipEntry.Extract.cs" />
+    <Compile Include="DotNetZip\Zip\ZipEntry.Read.cs" />
+    <Compile Include="DotNetZip\Zip\ZipEntry.Write.cs" />
+    <Compile Include="DotNetZip\Zip\ZipEntrySource.cs" />
+    <Compile Include="DotNetZip\Zip\ZipErrorAction.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.AddUpdate.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.Check.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.Events.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.Extract.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.Read.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.Save.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.SaveSelfExtractor.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.Selector.cs" />
+    <Compile Include="DotNetZip\Zip\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="DotNetZip\Zip\ZipInputStream.cs" />
+    <Compile Include="DotNetZip\Zip\ZipOutputStream.cs" />
+    <Compile Include="DotNetZip\Zip\ZipSegmentedStream.cs" />
+    <Compile Include="DotNetZip\Zlib\Deflate.cs" />
+    <Compile Include="DotNetZip\Zlib\DeflateStream.cs" />
+    <Compile Include="DotNetZip\Zlib\GZipStream.cs" />
+    <Compile Include="DotNetZip\Zlib\Inflate.cs" />
+    <Compile Include="DotNetZip\Zlib\InfTree.cs" />
+    <Compile Include="DotNetZip\Zlib\ParallelDeflateOutputStream.cs" />
+    <Compile Include="DotNetZip\Zlib\Tree.cs" />
+    <Compile Include="DotNetZip\Zlib\Zlib.cs" />
+    <Compile Include="DotNetZip\Zlib\ZlibBaseStream.cs" />
+    <Compile Include="DotNetZip\Zlib\ZlibCodec.cs" />
+    <Compile Include="DotNetZip\Zlib\ZlibConstants.cs" />
+    <Compile Include="DotNetZip\Zlib\ZlibStream.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +203,7 @@
     <None Include="Resources\Background1.png" />
     <None Include="Resources\Background.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
