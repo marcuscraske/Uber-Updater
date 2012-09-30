@@ -52,7 +52,10 @@ namespace Updater
             try
             { settings.Load("Updater.xml"); }
             catch (FileNotFoundException)
-            { throwError(this, "Settings file not found or inaccessible (Updater.xml)!"); }
+            {
+                throwError(this, "Settings file not found or inaccessible (Updater.xml)!");
+                Environment.Exit(1);
+            }
             catch (Exception ex)
             { throwError(this, "Unknown error - " + ex.Message); }
             // Check the updater is enabled, else terminate
@@ -138,11 +141,26 @@ namespace Updater
         {
             panelUpdate.Visible = true;
             buttUpdate.Visible = false;
-            status(this, "Downloading the latest binary...");
+            
             WebClient wc = new WebClient();
+            status(this, "Fetching binary URL...");
+            string binaryUrl;
+            try
+            {
+                binaryUrl = wc.DownloadString(new System.Uri(settings["update"]["urlBinary"].InnerText));
+            }
+            catch
+            {
+                status(this, "Idle.");
+                throwError(this, "Failed to fetch URL for binary; please check you're connected to the internet, or try again later!");
+                panelUpdate.Visible = true;
+                buttUpdate.Visible = false;
+                return;
+            }
+            status(this, "Downloading the latest binary...");
             wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
-            wc.DownloadFileAsync(new System.Uri(settings["update"]["urlBinary"].InnerText), AppDomain.CurrentDomain.BaseDirectory + "\\Update.zip");
+            wc.DownloadFileAsync(new System.Uri(binaryUrl), AppDomain.CurrentDomain.BaseDirectory + "\\Update.zip");
         }
         /// <summary>
         /// Invoked when the progress of the binary download has changed.
@@ -162,18 +180,34 @@ namespace Updater
         /// <param name="e"></param>
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            if (e.Error != null)
+            {
+                status(this, "Idle.");
+                Invoke((MethodInvoker)delegate()
+                {
+                    panelUpdate.Visible = true;
+                    buttUpdate.Visible = false;
+                });
+                throwError(this, "Failed to download update; check you have a connection to the internet or try again later!");
+                return;
+            }
+            status(this, "Finished download.");
             // Launch the secondary thread responsible for the rest of the process
-            Thread t = new Thread(new ParameterizedThreadStart(threadUpdate));
-            t.Start(this);
+            Thread t = new Thread(
+                delegate()
+                {
+                    threadUpdate(this);
+                });
+            t.Start();
         }
         /// <summary>
         /// Responsible for the rest of the installation (unzipping the binary etc).
         /// </summary>
         /// <param name="o"></param>
-        public static void threadUpdate(object o)
+        public static void threadUpdate(Main m)
         {
-            Main m = (Main)o;
             // Ensure no processes are running
+            status(m, "Terminating processes...");
             Process[] processes;
             while (true)
             {
@@ -288,6 +322,9 @@ namespace Updater
             main.Invoke((MethodInvoker)delegate()
             {
                 main.txtStatus.Text = text;
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine(text);
+#endif
             });
         }
         /// <summary>
@@ -323,7 +360,7 @@ namespace Updater
                 m.WindowState = FormWindowState.Minimized;
             });
             // Inform the user of what happened and what to do...
-            MessageBox.Show("An error occurred:\n\n" + text + "\n\nIt is recommended you back-up any settings files and reinstall the application, apologies! Please do contact us at:\n\nE-mail: \t" + contactEmail + "\nWebsite:\t" + contactWebsite, "Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("An error occurred:\n\n" + text + "\n\nIt is recommended you check your internet connection *or* back-up any settings files and reinstall the application, apologies! Please do contact us at:\n\nE-mail: \t" + contactEmail + "\nWebsite:\t" + contactWebsite, "Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         #endregion
     }
